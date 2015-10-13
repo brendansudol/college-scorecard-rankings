@@ -1,0 +1,26 @@
+{
+  "name": "edu-scorecard-rankings",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Brendan Sudol",
+  "license": "MIT",
+  "dependencies": {
+    "babel-core": "^5.6.1",
+    "babel-loader": "^5.1.4",
+    "css-loader": "^0.19.0",
+    "jquery": "^2.1.4",
+    "json-loader": "^0.5.3",
+    "lodash": "^3.1.0",
+    "qs": "^3.1.0",
+    "react": "^0.13.3",
+    "reactify": "^1.0.0",
+    "static-site-generator-webpack-plugin": "^1.0.0",
+    "webpack": "^1.9.11"
+  },
+  "scripts": {
+    "prod": "webpack -p --progress --colors",
+    "dev": "webpack -w --progress --colors",
+    "start": "npm run dev"
+  },
+  "keywords": []
+}
