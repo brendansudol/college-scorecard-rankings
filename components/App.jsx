@@ -1,5 +1,7 @@
 var React = require('react');
 var $ = require('jquery');
+var _ = require('lodash');
+var qs = require('qs');
 
 
 
@@ -64,27 +66,64 @@ var Table = React.createClass({
 var App = React.createClass({
     getInitialState: function(){
         return { 
+          inputs: {},
           colleges: [],
-          inputs: {}
+          criteria: [],
         };
     },
 
     componentWillMount: function() {
+      this.updateUrl = _.debounce(this.updateUrl, 200);
+
       var inputs = {};
-      Object.keys(metrics).forEach(function(m) {
-        inputs[m] = 0;
+      Object.keys(metrics).forEach(function(m) { 
+        inputs[m] = 0; 
       });
       this.setState({ inputs: inputs });
     },
 
     componentDidMount: function() {
+      this.fetchColleges();
+      this.getUrlParams();
+    },
+
+    fetchColleges: function() {
       var self = this,
           url = '/data/data-clean/college-data.json';
 
       $.getJSON(url, function(data) {
-        console.log(data[0]);
         self.setState({ colleges: data });
       });
+    },
+
+    getUrlParams: function() {
+      if (typeof window !== 'undefined') {
+        var params = window.location.search.replace(/^\?|\/$/g, ''),
+            params_obj = qs.parse(params);
+            
+        var inputs = this.state.inputs,
+            possible_vals = _.keys(levels).map(Number);
+
+        _.forEach(params_obj, function(v, k) {
+          var num = parseInt(v);
+          if (_.isFinite(inputs[k]) && 
+              _.isFinite(num) && 
+              _.includes(possible_vals, num)) {
+            console.log(k, num);
+            inputs[k] = num;
+          }
+        });
+
+        this.setState({ inputs: inputs });
+      }
+    },
+
+    updateUrl: function() {
+      var inputs = this.state.inputs,
+          pos_inputs = _.pick(inputs, function(v, k) { return v > 0; }),
+          params = qs.stringify(pos_inputs);
+
+      window.history.pushState(this.state, '', '?' + params);
     },
 
     changeInput: function(e) {
@@ -92,42 +131,51 @@ var App = React.createClass({
           inputs = this.state.inputs;
 
       inputs[target] = parseInt(e.target.value);
+
       this.setState({ inputs: inputs });
       this.updateRankCriteria();
     },
 
     updateRankCriteria: function() {
-      var inputs = this.state.inputs;
+      var inputs = this.state.inputs,
+          total = 0,
+          criteria = [];
 
-      var total = 0,
-          filtered_inputs = [],
-          rank_criteria = [];
+      var filtered_inputs = _.keys(_.pick(inputs, function(v, k) { 
+        return v > 0;
+      })).sort();
 
-      for (var key in inputs) {
-        if (!inputs.hasOwnProperty(key)) continue;
-        if (inputs[key] > 0) {
-          total += inputs[key];
-          filtered_inputs.push(key);
-        }
-      }
-
-      filtered_inputs = filtered_inputs.sort();
+      filtered_inputs.forEach(function(key) {
+        total += inputs[key];
+      });
 
       filtered_inputs.forEach(function(i) {
-        rank_criteria.push({
+        criteria.push({
           metric: i,
           perc: inputs[i] / total
-        })
+        });
       });
 
-      this.updateCollegeList(rank_criteria);
+      this.updateCollegeScore(criteria);
     },
 
-    updateCollegeList: function(criteria) {
-      criteria.forEach(function(c) {
-        console.log(c);
+    updateCollegeScore: function(criteria) {
+      var colleges = this.state.colleges;
+
+      colleges.forEach(function(college) {
+        var val = 0;
+        criteria.forEach(function(d) {
+          val += (college[d.metric + '_z'] * d.perc);
+        });
+        college.score = val;
       });
-      console.log('---');
+
+      colleges = _.sortByOrder(colleges, 'score', 'desc');
+
+      this.setState({ 
+        colleges: colleges,
+        criteria: criteria
+      }, this.updateUrl);
     },
 
     render: function() {
@@ -136,7 +184,7 @@ var App = React.createClass({
       var inputs = this.state.inputs,
           input_names = Object.keys(inputs);
 
-      var colleges = this.state.colleges.slice(0, 10);
+      var colleges = this.state.colleges.slice(0, 25);
 
       return (
         <div>
