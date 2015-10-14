@@ -93,6 +93,7 @@ var App = React.createClass({
 
       $.getJSON(url, function(data) {
         self.setState({ colleges: data });
+        self.updateRankCriteria();
       });
     },
 
@@ -109,12 +110,12 @@ var App = React.createClass({
           if (_.isFinite(inputs[k]) && 
               _.isFinite(num) && 
               _.includes(possible_vals, num)) {
-            console.log(k, num);
             inputs[k] = num;
           }
         });
 
         this.setState({ inputs: inputs });
+        this.updateRankCriteria();
       }
     },
 

@@ -20562,6 +20562,7 @@
 
 	    $.getJSON(url, function (data) {
 	      self.setState({ colleges: data });
+	      self.updateRankCriteria();
 	    });
 	  },
 
@@ -20576,12 +20577,12 @@
 	      _.forEach(params_obj, function (v, k) {
 	        var num = parseInt(v);
 	        if (_.isFinite(inputs[k]) && _.isFinite(num) && _.includes(possible_vals, num)) {
-	          console.log(k, num);
 	          inputs[k] = num;
 	        }
 	      });
 
 	      this.setState({ inputs: inputs });
+	      this.updateRankCriteria();
 	    }
 	  },
 
