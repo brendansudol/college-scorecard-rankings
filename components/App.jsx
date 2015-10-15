@@ -2,6 +2,8 @@ var React = require('react');
 var $ = require('jquery');
 var _ = require('lodash');
 var qs = require('qs');
+var config = require('../src/app-config');
+console.log(config);
 
 
 
@@ -15,6 +17,36 @@ var metrics = {
   MD_EARN_WNE_P10: 'Median Wage, 10 Years After Entry',
   NPT4_PUB_PRIV: 'Average Net Price',
   NPT4_048_PUB_PRIV: 'Net Price For Students Whose Families Earn less than $48,000'
+};
+
+var metrics2 = {
+  C150_4_POOLED: {
+    display: '% Who Graduate In 6 years'
+  },
+  PAR_ED_PCT_1STGEN: {
+    display: '% Of Students Who Are First Generation College Students'
+  },
+  PCTFLOAN: {
+    display: '% Of Students Recieving Federal Loans'
+  },
+  PCTPELL: {
+    display: '% Of Students Recieving Pell Grants'
+  },
+  CDR3: {
+    display: 'Default Rate'
+  },
+  MD_EARN_WNE_P6: {
+    display: 'Median Wage, 6 Years After Entry'
+  },
+  MD_EARN_WNE_P10: {
+    display: 'Median Wage, 10 Years After Entry'
+  },
+  NPT4_PUB_PRIV: {
+    display: 'Average Net Price'
+  },
+  NPT4_048_PUB_PRIV: {
+    display: 'Net Price For Students Whose Families Earn less than $48,000'
+  }
 };
 
 var levels = {
@@ -113,7 +145,7 @@ var App = React.createClass({
 
     fetchColleges: function() {
       var self = this,
-          url = 'data/data-clean/college-data.json';
+          url = 'college-data/data-clean/college-data.json';
 
       $.getJSON(url, function(data) {
         self.setState({ colleges: data });
