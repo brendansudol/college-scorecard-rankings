@@ -28,35 +28,59 @@ var levels = {
 
 var Table = React.createClass({
   render: function() {
-    var colleges = this.props.colleges;
+    var colleges = this.props.colleges,
+        inputs = this.props.inputs,
+        cols = Object.keys(inputs);
 
-    if (!colleges || colleges.length == 0) return null;
+    if (!colleges || 
+        colleges.length == 0 || 
+        cols.length == 0) 
+    {
+      return null;
+    };
+
+    var w1 = cols.length == 1 ? 50 : 40,
+        w2 = (100 - w1) / cols.length;
 
     return (
-      <table className="table-light border rounded">
-        <thead>
-          <tr>
-            <th>College</th>
-            <th>State</th>
-            <th>CDR3</th>
-            <th>MD_EARN_WNE_P6</th>
-          </tr>
-        </thead>
-        <tbody>
-        {
-          colleges.map(function(c) {
-            return (
-              <tr key={c.UNITID}>
-                <td>{c.INSTNM}</td>
-                <td>{c.STABBR}</td>
-                <td>{c.CDR3}</td>
-                <td>{c.MD_EARN_WNE_P6}</td>
-              </tr>
-            )
-          })
-        }
-        </tbody>
-      </table>
+      <div className="overflow-scroll">
+        <table className="table-light rounded">
+          <thead>
+            <tr>
+              <th style={{width: w1 + '%'}}>College</th>
+              {
+                cols.map(function(col) {
+                  return (
+                    <th key={col} style={{width: w2 + '%'}}>
+                      {metrics[col]}
+                    </th>
+                  )
+                })
+              }
+            </tr>
+          </thead>
+          <tbody>
+          {
+            colleges.map(function(college) {
+              return (
+                <tr key={college.UNITID}>
+                  <td>{college.INSTNM}</td>
+                  {
+                    cols.map(function(col) {
+                      return (
+                        <td key={college.UNITID + '-' + col}>
+                          {college[col]}
+                        </td>
+                      )
+                    })
+                  }
+                </tr>
+              )
+            })
+          }
+          </tbody>
+        </table>
+      </div>
     )
   }
 });
@@ -89,7 +113,7 @@ var App = React.createClass({
 
     fetchColleges: function() {
       var self = this,
-          url = '/data/data-clean/college-data.json';
+          url = 'data/data-clean/college-data.json';
 
       $.getJSON(url, function(data) {
         self.setState({ colleges: data });
@@ -121,8 +145,8 @@ var App = React.createClass({
 
     updateUrl: function() {
       var inputs = this.state.inputs,
-          pos_inputs = _.pick(inputs, function(v, k) { return v > 0; }),
-          params = qs.stringify(pos_inputs);
+          active_inputs = _.pick(inputs, function(v, k) { return v > 0; }),
+          params = qs.stringify(active_inputs);
 
       window.history.pushState(this.state, '', '?' + params);
     },
@@ -183,9 +207,10 @@ var App = React.createClass({
       var self = this;
 
       var inputs = this.state.inputs,
-          input_names = Object.keys(inputs);
+          input_groups = _.chunk(Object.keys(inputs), 3);
 
-      var colleges = this.state.colleges.slice(0, 25);
+      var active_inputs = _.pick(inputs, function(v, k) { return v > 0; }),
+          colleges = this.state.colleges.slice(0, 25);
 
       return (
         <div>
@@ -193,28 +218,35 @@ var App = React.createClass({
             <div className='fieldset-reset py2'>
               <div className='clearfix mxn3 mb3'>
               {
-                input_names.map(function(n) {
-                  var val = inputs[n];
-
+                input_groups.map(function(i_group) {
                   return (
-                    <div key={n} className='sm-col sm-col-4 mb2 px3'>
-                      <label className='h5 bold block'>
-                        {n} <small className='gray'>({levels[val]})</small>
-                      </label>
-                      <input type='range' value={val}
-                        min='0' max='3'
-                        onBlur={self.changeInput}
-                        onChange={self.changeInput}
-                        data-input={n}
-                        className='col-12 dark-gray range-light' />
-                      </div>
+                    <div key={i_group} className='clearfix mb2 sm-flex flex-end'>
+                    {
+                      i_group.map(function(i) {
+                        var val = inputs[i];
+                        return (
+                          <div key={i} className='sm-col sm-col-4 mb2 px3'>
+                            <label className='h5 bold block'>
+                              {metrics[i]} <br/><small className='gray'>({levels[val]})</small>
+                            </label>
+                            <input type='range' value={val}
+                              min='0' max='3'
+                              onBlur={self.changeInput}
+                              onChange={self.changeInput}
+                              data-input={i}
+                              className='col-12 dark-gray range-light' />
+                          </div>
+                        );
+                      })
+                    }
+                    </div>
                   );
                 })
               }
               </div>
             </div>
           </form>
-          <Table colleges={colleges} />
+          <Table colleges={colleges} inputs={active_inputs} />
         </div>
       )
     }

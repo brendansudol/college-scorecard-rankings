@@ -20461,70 +20461,65 @@
 	  displayName: 'Table',
 
 	  render: function render() {
-	    var colleges = this.props.colleges;
+	    var colleges = this.props.colleges,
+	        inputs = this.props.inputs,
+	        cols = Object.keys(inputs);
 
-	    if (!colleges || colleges.length == 0) return null;
+	    if (!colleges || colleges.length == 0 || cols.length == 0) {
+	      return null;
+	    };
+
+	    var w1 = cols.length == 1 ? 50 : 40,
+	        w2 = (100 - w1) / cols.length;
 
 	    return React.createElement(
-	      'table',
-	      { className: 'table-light border rounded' },
+	      'div',
+	      { className: 'overflow-scroll' },
 	      React.createElement(
-	        'thead',
-	        null,
+	        'table',
+	        { className: 'table-light rounded' },
 	        React.createElement(
-	          'tr',
+	          'thead',
 	          null,
 	          React.createElement(
-	            'th',
-	            null,
-	            'College'
-	          ),
-	          React.createElement(
-	            'th',
-	            null,
-	            'State'
-	          ),
-	          React.createElement(
-	            'th',
-	            null,
-	            'CDR3'
-	          ),
-	          React.createElement(
-	            'th',
-	            null,
-	            'MD_EARN_WNE_P6'
-	          )
-	        )
-	      ),
-	      React.createElement(
-	        'tbody',
-	        null,
-	        colleges.map(function (c) {
-	          return React.createElement(
 	            'tr',
-	            { key: c.UNITID },
+	            null,
 	            React.createElement(
-	              'td',
-	              null,
-	              c.INSTNM
+	              'th',
+	              { style: { width: w1 + '%' } },
+	              'College'
 	            ),
-	            React.createElement(
-	              'td',
-	              null,
-	              c.STABBR
-	            ),
-	            React.createElement(
-	              'td',
-	              null,
-	              c.CDR3
-	            ),
-	            React.createElement(
-	              'td',
-	              null,
-	              c.MD_EARN_WNE_P6
-	            )
-	          );
-	        })
+	            cols.map(function (col) {
+	              return React.createElement(
+	                'th',
+	                { key: col, style: { width: w2 + '%' } },
+	                metrics[col]
+	              );
+	            })
+	          )
+	        ),
+	        React.createElement(
+	          'tbody',
+	          null,
+	          colleges.map(function (college) {
+	            return React.createElement(
+	              'tr',
+	              { key: college.UNITID },
+	              React.createElement(
+	                'td',
+	                null,
+	                college.INSTNM
+	              ),
+	              cols.map(function (col) {
+	                return React.createElement(
+	                  'td',
+	                  { key: college.UNITID + '-' + col },
+	                  college[col]
+	                );
+	              })
+	            );
+	          })
+	        )
 	      )
 	    );
 	  }
@@ -20558,7 +20553,7 @@
 
 	  fetchColleges: function fetchColleges() {
 	    var self = this,
-	        url = '/data/data-clean/college-data.json';
+	        url = 'data/data-clean/college-data.json';
 
 	    $.getJSON(url, function (data) {
 	      self.setState({ colleges: data });
@@ -20588,10 +20583,10 @@
 
 	  updateUrl: function updateUrl() {
 	    var inputs = this.state.inputs,
-	        pos_inputs = _.pick(inputs, function (v, k) {
+	        active_inputs = _.pick(inputs, function (v, k) {
 	      return v > 0;
 	    }),
-	        params = qs.stringify(pos_inputs);
+	        params = qs.stringify(active_inputs);
 
 	    window.history.pushState(this.state, '', '?' + params);
 	  },
@@ -20652,9 +20647,12 @@
 	    var self = this;
 
 	    var inputs = this.state.inputs,
-	        input_names = Object.keys(inputs);
+	        input_groups = _.chunk(Object.keys(inputs), 3);
 
-	    var colleges = this.state.colleges.slice(0, 25);
+	    var active_inputs = _.pick(inputs, function (v, k) {
+	      return v > 0;
+	    }),
+	        colleges = this.state.colleges.slice(0, 25);
 
 	    return React.createElement(
 	      'div',
@@ -20668,37 +20666,43 @@
 	          React.createElement(
 	            'div',
 	            { className: 'clearfix mxn3 mb3' },
-	            input_names.map(function (n) {
-	              var val = inputs[n];
-
+	            input_groups.map(function (i_group) {
 	              return React.createElement(
 	                'div',
-	                { key: n, className: 'sm-col sm-col-4 mb2 px3' },
-	                React.createElement(
-	                  'label',
-	                  { className: 'h5 bold block' },
-	                  n,
-	                  ' ',
-	                  React.createElement(
-	                    'small',
-	                    { className: 'gray' },
-	                    '(',
-	                    levels[val],
-	                    ')'
-	                  )
-	                ),
-	                React.createElement('input', { type: 'range', value: val,
-	                  min: '0', max: '3',
-	                  onBlur: self.changeInput,
-	                  onChange: self.changeInput,
-	                  'data-input': n,
-	                  className: 'col-12 dark-gray range-light' })
+	                { key: i_group, className: 'clearfix mb2 sm-flex flex-end' },
+	                i_group.map(function (i) {
+	                  var val = inputs[i];
+	                  return React.createElement(
+	                    'div',
+	                    { key: i, className: 'sm-col sm-col-4 mb2 px3' },
+	                    React.createElement(
+	                      'label',
+	                      { className: 'h5 bold block' },
+	                      metrics[i],
+	                      ' ',
+	                      React.createElement('br', null),
+	                      React.createElement(
+	                        'small',
+	                        { className: 'gray' },
+	                        '(',
+	                        levels[val],
+	                        ')'
+	                      )
+	                    ),
+	                    React.createElement('input', { type: 'range', value: val,
+	                      min: '0', max: '3',
+	                      onBlur: self.changeInput,
+	                      onChange: self.changeInput,
+	                      'data-input': i,
+	                      className: 'col-12 dark-gray range-light' })
+	                  );
+	                })
 	              );
 	            })
 	          )
 	        )
 	      ),
-	      React.createElement(Table, { colleges: colleges })
+	      React.createElement(Table, { colleges: colleges, inputs: active_inputs })
 	    );
 	  }
 	});

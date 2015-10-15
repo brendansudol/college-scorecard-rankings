@@ -3,10 +3,10 @@
   Basscss
   http://basscss.com
 
-  4.35 kB
-  469 Rules
-  512 Selectors
-  673 Declarations
+  5.16 kB
+  523 Rules
+  603 Selectors
+  748 Declarations
 
 */
 
@@ -711,6 +711,39 @@ hr {
 
 }
 
+.flex { display: flex }
+
+.flex-column  { flex-direction: column }
+.flex-wrap    { flex-wrap: wrap }
+
+.flex-center   { align-items: center }
+.flex-baseline { align-items: baseline }
+.flex-stretch  { align-items: stretch }
+.flex-start    { align-items: flex-start }
+.flex-end      { align-items: flex-end }
+
+.flex-justify  { justify-content: space-between }
+
+.flex-auto {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+}
+.flex-grow { flex: 1 0 auto }
+.flex-none { flex: none }
+
+.flex-first { order: -1 }
+.flex-last  { order: 99999 }
+@media (min-width: 40em) {
+  .sm-flex { display: flex }
+}
+@media (min-width: 52em) {
+  .md-flex { display: flex }
+}
+@media (min-width: 64em) {
+  .lg-flex { display: flex }
+}
+
 .border {
   border-style: solid;
   border-width: 1px;
@@ -858,6 +891,52 @@ hr {
   padding-right: .5rem;
 }
 
+.field-dark {
+  color: white;
+  background-color: rgba(0,0,0,.25);
+  border: 1px solid rgba(0,0,0,.0625);
+  border-radius: 3px;
+}
+
+.field-dark::placeholder {
+  color: rgba(255,255,255,.75);
+}
+
+.field-dark:focus {
+  outline: 0;
+  border: 1px solid rgba(255,255,255,.5);
+  box-shadow: 0 0 0 2px rgba(255,255,255,.25);
+}
+
+.field-dark:read-only:not(select) {
+  background-color: rgba(255,255,255,.25);
+}
+
+.field-dark.is-success {
+  border-color: #2ecc40;
+}
+
+.field-dark.is-success:focus {
+  box-shadow: 0 0 0 2px rgba(46, 204, 64, 0.5);
+}
+
+.field-dark.is-warning {
+  border-color: #ffdc00;
+}
+
+.field-dark.is-warning:focus {
+  box-shadow: 0 0 0 2px rgba(255, 220, 0, 0.5);
+}
+
+.field-dark:invalid,
+.field-dark.is-error {
+  border-color: #ff4136;
+}
+
+.field-dark.is-error:focus {
+  box-shadow: 0 0 0 2px rgba(255, 65, 54, 0.5);
+}
+
 .range-light {
   color: inherit;
   background-color: transparent;
@@ -921,6 +1000,120 @@ hr {
 
 .progress::-moz-progress-bar {
   background-color: currentColor;
+}
+
+.hljs {
+  -webkit-text-size-adjust: none;
+}
+
+.hljs-comment,
+.diff .hljs-header,
+.hljs-javadoc {
+  color: #aaa;
+  font-style: italic;
+}
+
+.hljs-keyword,
+.css .rule .hljs-keyword,
+.hljs-winutils,
+.nginx .hljs-title,
+.hljs-subst,
+.hljs-request,
+.hljs-status {
+  color: #111;
+  font-weight: bold;
+}
+
+.hljs-number,
+.hljs-hexcolor,
+.ruby .hljs-constant {
+  color: #3d9970;
+}
+
+.hljs-string,
+.hljs-tag .hljs-value,
+.hljs-phpdoc,
+.hljs-dartdoc,
+.tex .hljs-formula {
+  color: #ff4136;
+}
+
+.hljs-title,
+.hljs-id,
+.scss .hljs-preprocessor {
+  color: #ff4136;
+  font-weight: bold;
+}
+
+.hljs-list .hljs-keyword,
+.hljs-subst {
+  font-weight: normal;
+}
+
+.hljs-class .hljs-title,
+.hljs-type,
+.vhdl .hljs-literal,
+.tex .hljs-command {
+  color: #001f3f;
+  font-weight: bold;
+}
+
+.hljs-tag,
+.hljs-tag .hljs-title,
+.hljs-rules .hljs-property,
+.django .hljs-tag .hljs-keyword {
+  color: #001f3f;
+  font-weight: normal;
+}
+
+.hljs-attribute,
+.hljs-variable,
+.lisp .hljs-body {
+  color: #3d9970;
+}
+
+.hljs-regexp {
+  color: #3d9970;
+}
+
+.hljs-symbol,
+.ruby .hljs-symbol .hljs-string,
+.lisp .hljs-keyword,
+.clojure .hljs-keyword,
+.scheme .hljs-keyword,
+.tex .hljs-special,
+.hljs-prompt {
+  color: #b10dc9;
+}
+
+.hljs-built_in {
+  color: #001f3f;
+}
+
+.hljs-preprocessor,
+.hljs-pragma,
+.hljs-pi,
+.hljs-doctype,
+.hljs-shebang,
+.hljs-cdata {
+  color: #aaa;
+  font-weight: bold;
+}
+
+.hljs-deletion {
+  background: #f012be;
+}
+
+.hljs-addition {
+  background: #01ff70;
+}
+
+.diff .hljs-change {
+  background: #001f3f;
+}
+
+.hljs-chunk {
+  color: #ddd;
 }
 
 input[type=range] {
@@ -1198,6 +1391,53 @@ input[type=range] {
   .lg-p4  { padding: 4rem }
   .lg-py4 { padding-top: 4rem; padding-bottom: 4rem }
   .lg-px4 { padding-left: 4rem; padding-right: 4rem }
+
+}
+
+.table {
+  display: table;
+  width: 100%;
+}
+.table-cell {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.table-fixed { table-layout: fixed }
+@media (min-width: 40em) {
+
+  .sm-table {
+    display: table;
+    width: 100%;
+  }
+  .sm-table-cell {
+    display: table-cell;
+    vertical-align: middle;
+  }
+
+}
+@media (min-width: 52em) {
+
+  .md-table {
+    display: table;
+    width: 100%;
+  }
+  .md-table-cell {
+    display: table-cell;
+    vertical-align: middle;
+  }
+
+}
+@media (min-width: 64em) {
+
+  .lg-table {
+    display: table;
+    width: 100%;
+  }
+  .lg-table-cell {
+    display: table-cell;
+    vertical-align: middle;
+  }
 
 }
 
