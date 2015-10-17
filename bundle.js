@@ -20437,6 +20437,7 @@
 	var $ = __webpack_require__(158);
 	var _ = __webpack_require__(159);
 	var qs = __webpack_require__(161);
+	var fmt = __webpack_require__(166);
 
 	var config = __webpack_require__(167),
 	    metrics = config.metrics,
@@ -20445,21 +20446,30 @@
 	var Formula = React.createClass({
 	  displayName: 'Formula',
 
+	  format: function format(x) {
+	    var how = x * 100 % 1 === 0 ? '.0%' : '.1%';
+	    return fmt.format(how)(x);
+	  },
+
 	  render: function render() {
-	    var criteria = this.props.criteria;
-	    console.log(criteria);
+	    var self = this,
+	        criteria = this.props.criteria;
+
+	    criteria = _.sortByOrder(criteria, 'perc', 'desc');
 
 	    return React.createElement(
 	      'div',
 	      { className: 'mb3' },
-	      criteria.map(function (c) {
+	      'Ranking includes: ',
+	      criteria.map(function (c, i) {
 	        return React.createElement(
 	          'span',
 	          { key: c.metric },
-	          c.metric,
-	          ' (',
-	          c.perc,
-	          ') '
+	          metrics[c.metric].display,
+	          ' (',
+	          self.format(c.perc),
+	          ')',
+	          i + 1 == criteria.length ? '.' : ', '
 	        );
 	      })
 	    );
@@ -20479,7 +20489,7 @@
 	    };
 
 	    var w1 = cols.length == 1 ? 50 : 40,
-	        w2 = (100 - w1) / cols.length;
+	        w2 = (100 - 5 - w1) / cols.length;
 
 	    return React.createElement(
 	      'section',
@@ -20498,6 +20508,11 @@
 	              null,
 	              React.createElement(
 	                'th',
+	                { style: { width: '5%' } },
+	                '#'
+	              ),
+	              React.createElement(
+	                'th',
 	                { style: { width: w1 + '%' } },
 	                'College'
 	              ),
@@ -20513,10 +20528,15 @@
 	          React.createElement(
 	            'tbody',
 	            null,
-	            colleges.map(function (college) {
+	            colleges.map(function (college, i) {
 	              return React.createElement(
 	                'tr',
 	                { key: college.UNITID },
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  i + 1
+	                ),
 	                React.createElement(
 	                  'td',
 	                  null,
@@ -43300,7 +43320,7 @@
 
 	'use strict';
 
-	var f = __webpack_require__(166);
+	var fmt = __webpack_require__(166);
 
 	var metrics = {
 	  C150_4_POOLED: {
@@ -43313,7 +43333,7 @@
 	  },
 	  MD_EARN_WNE_P10: {
 	    display: 'Median Wage, 10 Years After Entry',
-	    fmt: "($.2s"
+	    fmt: "($.3s"
 	  },
 	  PCTFLOAN: {
 	    display: '% Of Students Receiving Federal Loans',
@@ -43329,17 +43349,17 @@
 	  },
 	  NPT4_PUB_PRIV: {
 	    display: 'Average Net Price',
-	    fmt: "($.2s"
+	    fmt: "($.3s"
 	  },
 	  NPT4_048_PUB_PRIV: {
 	    display: 'Net Price Whose Families Earn < $48k',
-	    fmt: "($.2s"
+	    fmt: "($.3s"
 	  }
 	};
 
 	// loop through metrics and add format functions
 	Object.keys(metrics).forEach(function (k) {
-	  metrics[k].fmt = f.format(metrics[k].fmt);
+	  metrics[k].fmt = fmt.format(metrics[k].fmt);
 	});
 
 	var importance = {

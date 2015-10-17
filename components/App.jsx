@@ -2,6 +2,7 @@ var React = require('react');
 var $ = require('jquery');
 var _ = require('lodash');
 var qs = require('qs');
+var fmt = require('d3-format');
 
 var config = require('../src/app-config'),
     metrics = config.metrics,
@@ -10,17 +11,31 @@ var config = require('../src/app-config'),
 
 
 var Formula = React.createClass({
+  format: function(x) {
+    var how = ((x * 100) % 1 === 0) ? '.0%' : '.1%';
+    return fmt.format(how)(x);
+  },
+
   render: function() {
-    var criteria = this.props.criteria;
-    console.log(criteria);
+    var self = this, 
+        criteria = this.props.criteria;
+
+    criteria = _.sortByOrder(criteria, 'perc', 'desc');
 
     return (
       <div className="mb3">
-      {
-        criteria.map(function(c) {
-          return <span key={c.metric}>{c.metric} ({c.perc}) </span>
-        })
-      }
+        Ranking includes:&nbsp;
+        {
+          criteria.map(function(c, i) {
+            return (
+              <span key={c.metric}>
+                {metrics[c.metric].display}
+                &nbsp;({self.format(c.perc)})
+                {i + 1 == criteria.length ? '.' : ', '}
+              </span>
+            )
+          })
+        }
       </div>
     )
   }
@@ -41,7 +56,7 @@ var Table = React.createClass({
     };
 
     var w1 = cols.length == 1 ? 50 : 40,
-        w2 = (100 - w1) / cols.length;
+        w2 = (100 - 5 - w1) / cols.length;
 
     return (
       <section>
@@ -49,6 +64,7 @@ var Table = React.createClass({
         <table className="table-light rounded">
           <thead>
             <tr>
+              <th style={{width: '5%'}}>#</th>
               <th style={{width: w1 + '%'}}>College</th>
               {
                 cols.map(function(col) {
@@ -63,9 +79,10 @@ var Table = React.createClass({
           </thead>
           <tbody>
           {
-            colleges.map(function(college) {
+            colleges.map(function(college, i) {
               return (
                 <tr key={college.UNITID}>
+                  <td>{i + 1}</td>
                   <td>{college.INSTNM}</td>
                   {
                     cols.map(function(col) {

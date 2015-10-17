@@ -1,4 +1,4 @@
-var f = require('d3-format');
+var fmt = require('d3-format');
 
 
 
@@ -13,7 +13,7 @@ var metrics = {
   },
   MD_EARN_WNE_P10: {
     display: 'Median Wage, 10 Years After Entry',
-    fmt: "($.2s"
+    fmt: "($.3s"
   },
   PCTFLOAN: {
     display: '% Of Students Receiving Federal Loans',
@@ -29,18 +29,18 @@ var metrics = {
   },
   NPT4_PUB_PRIV: {
     display: 'Average Net Price',
-    fmt: "($.2s"
+    fmt: "($.3s"
   },
   NPT4_048_PUB_PRIV: {
     display: 'Net Price Whose Families Earn < $48k',
-    fmt: "($.2s"
+    fmt: "($.3s"
   }
 };
 
 
 // loop through metrics and add format functions
 Object.keys(metrics).forEach(function(k) { 
-  metrics[k].fmt = f.format(metrics[k].fmt);
+  metrics[k].fmt = fmt.format(metrics[k].fmt);
 });
 
 
