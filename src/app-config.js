@@ -1,46 +1,50 @@
-var metrics = {
-  C150_4_POOLED: '% Who Graduate In 6 years',
-  PAR_ED_PCT_1STGEN: '% Of Students Who Are First Generation College Students',
-  PCTFLOAN: '% Of Students Recieving Federal Loans',
-  PCTPELL: '% Of Students Recieving Pell Grants',
-  CDR3: 'Default Rate',
-  MD_EARN_WNE_P6: 'Median Wage, 6 Years After Entry',
-  MD_EARN_WNE_P10: 'Median Wage, 10 Years After Entry',
-  NPT4_PUB_PRIV: 'Average Net Price',
-  NPT4_048_PUB_PRIV: 'Net Price For Students Whose Families Earn less than $48,000'
-};
+var f = require('d3-format');
 
-var metrics2 = {
+
+
+var metrics = {
   C150_4_POOLED: {
-    display: '% Who Graduate In 6 years'
+    display: '% Who Graduate In 6 years',
+    fmt: ".0%"
   },
   PAR_ED_PCT_1STGEN: {
-    display: '% Of Students Who Are First Generation College Students'
-  },
-  PCTFLOAN: {
-    display: '% Of Students Recieving Federal Loans'
-  },
-  PCTPELL: {
-    display: '% Of Students Recieving Pell Grants'
-  },
-  CDR3: {
-    display: 'Default Rate'
-  },
-  MD_EARN_WNE_P6: {
-    display: 'Median Wage, 6 Years After Entry'
+    display: '% First Generation College Students',
+    fmt: ".0%"
   },
   MD_EARN_WNE_P10: {
-    display: 'Median Wage, 10 Years After Entry'
+    display: 'Median Wage, 10 Years After Entry',
+    fmt: "($.2s"
+  },
+  PCTFLOAN: {
+    display: '% Of Students Receiving Federal Loans',
+    fmt: ".0%"
+  },
+  PCTPELL: {
+    display: '% Of Students Receiving Pell Grants',
+    fmt: ".0%"
+  },
+  CDR3: {
+    display: 'Default Rate',
+    fmt: ".1%"
   },
   NPT4_PUB_PRIV: {
-    display: 'Average Net Price'
+    display: 'Average Net Price',
+    fmt: "($.2s"
   },
   NPT4_048_PUB_PRIV: {
-    display: 'Net Price For Students Whose Families Earn less than $48,000'
+    display: 'Net Price Whose Families Earn < $48k',
+    fmt: "($.2s"
   }
 };
 
-var levels = {
+
+// loop through metrics and add format functions
+Object.keys(metrics).forEach(function(k) { 
+  metrics[k].fmt = f.format(metrics[k].fmt);
+});
+
+
+var importance = {
   0: 'Not important',
   1: 'A little important',
   2: 'Fairly important',
@@ -48,11 +52,9 @@ var levels = {
 };
 
 
-
 var data = {
   metrics: metrics,
-  metrics2: metrics2,
-  levels: levels
+  importance: importance
 }
 
 module.exports = data

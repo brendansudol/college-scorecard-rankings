@@ -2,60 +2,29 @@ var React = require('react');
 var $ = require('jquery');
 var _ = require('lodash');
 var qs = require('qs');
-var config = require('../src/app-config');
-console.log(config);
+
+var config = require('../src/app-config'),
+    metrics = config.metrics,
+    importance = config.importance;
 
 
 
-var metrics = {
-  C150_4_POOLED: '% Who Graduate In 6 years',
-  PAR_ED_PCT_1STGEN: '% Of Students Who Are First Generation College Students',
-  PCTFLOAN: '% Of Students Recieving Federal Loans',
-  PCTPELL: '% Of Students Recieving Pell Grants',
-  CDR3: 'Default Rate',
-  MD_EARN_WNE_P6: 'Median Wage, 6 Years After Entry',
-  MD_EARN_WNE_P10: 'Median Wage, 10 Years After Entry',
-  NPT4_PUB_PRIV: 'Average Net Price',
-  NPT4_048_PUB_PRIV: 'Net Price For Students Whose Families Earn less than $48,000'
-};
+var Formula = React.createClass({
+  render: function() {
+    var criteria = this.props.criteria;
+    console.log(criteria);
 
-var metrics2 = {
-  C150_4_POOLED: {
-    display: '% Who Graduate In 6 years'
-  },
-  PAR_ED_PCT_1STGEN: {
-    display: '% Of Students Who Are First Generation College Students'
-  },
-  PCTFLOAN: {
-    display: '% Of Students Recieving Federal Loans'
-  },
-  PCTPELL: {
-    display: '% Of Students Recieving Pell Grants'
-  },
-  CDR3: {
-    display: 'Default Rate'
-  },
-  MD_EARN_WNE_P6: {
-    display: 'Median Wage, 6 Years After Entry'
-  },
-  MD_EARN_WNE_P10: {
-    display: 'Median Wage, 10 Years After Entry'
-  },
-  NPT4_PUB_PRIV: {
-    display: 'Average Net Price'
-  },
-  NPT4_048_PUB_PRIV: {
-    display: 'Net Price For Students Whose Families Earn less than $48,000'
+    return (
+      <div className="mb3">
+      {
+        criteria.map(function(c) {
+          return <span key={c.metric}>{c.metric} ({c.perc}) </span>
+        })
+      }
+      </div>
+    )
   }
-};
-
-var levels = {
-  0: 'Not important',
-  1: 'A little important',
-  2: 'Fairly important',
-  3: 'Extremely important'
-};
-
+});
 
 
 var Table = React.createClass({
@@ -75,7 +44,8 @@ var Table = React.createClass({
         w2 = (100 - w1) / cols.length;
 
     return (
-      <div className="overflow-scroll">
+      <section>
+      <div className="overflow-scroll mb4">
         <table className="table-light rounded">
           <thead>
             <tr>
@@ -84,7 +54,7 @@ var Table = React.createClass({
                 cols.map(function(col) {
                   return (
                     <th key={col} style={{width: w2 + '%'}}>
-                      {metrics[col]}
+                      {metrics[col].display}
                     </th>
                   )
                 })
@@ -99,9 +69,10 @@ var Table = React.createClass({
                   <td>{college.INSTNM}</td>
                   {
                     cols.map(function(col) {
+                      var fmt = metrics[col].fmt;
                       return (
                         <td key={college.UNITID + '-' + col}>
-                          {college[col]}
+                          {fmt(college[col])}
                         </td>
                       )
                     })
@@ -113,6 +84,18 @@ var Table = React.createClass({
           </tbody>
         </table>
       </div>
+      <p>
+        A note about the data and methodology. We filtered for schools where the 
+        predominant degree granted is a four-year bachelor's degree. We also 
+        filter out trade-specific schools and religious programs like seminaries 
+        and yeshivas. There are also a few limitations to the income data that 
+        the government released. Incomes reported in the data set include only 
+        students who took out federal loans from the government. Each 
+        institution's score is based on a weighted sum of z-scores for 
+        each variable mentioned in the list. Ratings cannot be compared 
+        across lists.
+      </p>
+      </section>
     )
   }
 });
@@ -159,7 +142,7 @@ var App = React.createClass({
             params_obj = qs.parse(params);
             
         var inputs = this.state.inputs,
-            possible_vals = _.keys(levels).map(Number);
+            possible_vals = _.keys(importance).map(Number);
 
         _.forEach(params_obj, function(v, k) {
           var num = parseInt(v);
@@ -248,7 +231,7 @@ var App = React.createClass({
         <div>
           <form onSubmit={this.handleSubmit}>
             <div className='fieldset-reset py2'>
-              <div className='clearfix mxn3 mb3'>
+              <div className='clearfix mxn3'>
               {
                 input_groups.map(function(i_group) {
                   return (
@@ -259,7 +242,8 @@ var App = React.createClass({
                         return (
                           <div key={i} className='sm-col sm-col-4 mb2 px3'>
                             <label className='h5 bold block'>
-                              {metrics[i]} <br/><small className='gray'>({levels[val]})</small>
+                              {metrics[i].display} <br/>
+                              <small className='gray'>{importance[val]}</small>
                             </label>
                             <input type='range' value={val}
                               min='0' max='3'
@@ -278,6 +262,7 @@ var App = React.createClass({
               </div>
             </div>
           </form>
+          <Formula criteria={this.state.criteria} />
           <Table colleges={colleges} inputs={active_inputs} />
         </div>
       )
