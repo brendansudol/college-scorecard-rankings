@@ -2,120 +2,15 @@ var React = require('react');
 var $ = require('jquery');
 var _ = require('lodash');
 var qs = require('qs');
-var fmt = require('d3-format');
 
 var config = require('../src/app-config'),
     metrics = config.metrics,
     importance = config.importance;
 
-
-
-var Formula = React.createClass({
-  format: function(x) {
-    var how = ((x * 100) % 1 === 0) ? '.0%' : '.1%';
-    return fmt.format(how)(x);
-  },
-
-  render: function() {
-    var self = this, 
-        criteria = this.props.criteria;
-
-    criteria = _.sortByOrder(criteria, 'perc', 'desc');
-
-    return (
-      <div className="mb3">
-        Ranking includes:&nbsp;
-        {
-          criteria.map(function(c, i) {
-            return (
-              <span key={c.metric}>
-                {metrics[c.metric].display}
-                &nbsp;({self.format(c.perc)})
-                {i + 1 == criteria.length ? '.' : ', '}
-              </span>
-            )
-          })
-        }
-      </div>
-    )
-  }
-});
-
-
-var Table = React.createClass({
-  render: function() {
-    var colleges = this.props.colleges,
-        inputs = this.props.inputs,
-        cols = Object.keys(inputs);
-
-    if (!colleges || 
-        colleges.length == 0 || 
-        cols.length == 0) 
-    {
-      return null;
-    };
-
-    var w1 = cols.length == 1 ? 50 : 40,
-        w2 = (100 - 5 - w1) / cols.length;
-
-    return (
-      <section>
-      <div className="overflow-scroll mb4">
-        <table className="table-light rounded">
-          <thead>
-            <tr>
-              <th style={{width: '5%'}}>#</th>
-              <th style={{width: w1 + '%'}}>College</th>
-              {
-                cols.map(function(col) {
-                  return (
-                    <th key={col} style={{width: w2 + '%'}}>
-                      {metrics[col].display}
-                    </th>
-                  )
-                })
-              }
-            </tr>
-          </thead>
-          <tbody>
-          {
-            colleges.map(function(college, i) {
-              return (
-                <tr key={college.UNITID}>
-                  <td>{i + 1}</td>
-                  <td>{college.INSTNM}</td>
-                  {
-                    cols.map(function(col) {
-                      var fmt = metrics[col].fmt;
-                      return (
-                        <td key={college.UNITID + '-' + col}>
-                          {fmt(college[col])}
-                        </td>
-                      )
-                    })
-                  }
-                </tr>
-              )
-            })
-          }
-          </tbody>
-        </table>
-      </div>
-      <p>
-        A note about the data and methodology. We filtered for schools where the 
-        predominant degree granted is a four-year bachelor's degree. We also 
-        filter out trade-specific schools and religious programs like seminaries 
-        and yeshivas. There are also a few limitations to the income data that 
-        the government released. Incomes reported in the data set include only 
-        students who took out federal loans from the government. Each 
-        institution's score is based on a weighted sum of z-scores for 
-        each variable mentioned in the list. Ratings cannot be compared 
-        across lists.
-      </p>
-      </section>
-    )
-  }
-});
+var Header = require('./Header.jsx');
+var Footer = require('./Footer.jsx');
+var Formula = require('./Formula.jsx');
+var Table = require('./Table.jsx');
 
 
 
@@ -246,7 +141,9 @@ var App = React.createClass({
 
       return (
         <div>
-          <form onSubmit={this.handleSubmit}>
+          <Header />
+          <div className="h3 bold">Select the ...</div>
+          <form>
             <div className='fieldset-reset py2'>
               <div className='clearfix mxn3'>
               {
@@ -281,6 +178,7 @@ var App = React.createClass({
           </form>
           <Formula criteria={this.state.criteria} />
           <Table colleges={colleges} inputs={active_inputs} />
+          <Footer />
         </div>
       )
     }
