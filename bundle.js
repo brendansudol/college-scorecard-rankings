@@ -20445,6 +20445,7 @@
 	var Header = __webpack_require__(168);
 	var Footer = __webpack_require__(169);
 	var Formula = __webpack_require__(170);
+	var OrderToggle = __webpack_require__(172);
 	var Table = __webpack_require__(171);
 
 	var App = React.createClass({
@@ -20454,7 +20455,8 @@
 	    return {
 	      inputs: {},
 	      colleges: [],
-	      criteria: []
+	      criteria: [],
+	      order: 'top'
 	    };
 	  },
 
@@ -20513,6 +20515,12 @@
 	    window.history.pushState(this.state, '', '?' + params);
 	  },
 
+	  toggleOrder: function toggleOrder(o) {
+	    if (o !== this.state.order) {
+	      this.setState({ order: o });
+	    }
+	  },
+
 	  changeInput: function changeInput(e) {
 	    var target = e.target.getAttribute('data-input'),
 	        inputs = this.state.inputs;
@@ -20547,7 +20555,8 @@
 	  },
 
 	  updateCollegeScore: function updateCollegeScore(criteria) {
-	    var colleges = this.state.colleges;
+	    var colleges = this.state.colleges,
+	        order = this.state.order;
 
 	    colleges.forEach(function (college) {
 	      var val = 0,
@@ -20561,8 +20570,6 @@
 	      college.score = val;
 	      college.eligible = eligible;
 	    });
-
-	    colleges = _.sortByOrder(colleges, 'score', 'desc');
 
 	    this.setState({
 	      colleges: colleges,
@@ -20579,9 +20586,13 @@
 	      return v > 0;
 	    });
 
-	    var colleges = _.filter(this.state.colleges, function (c) {
+	    var colleges = this.state.colleges,
+	        sort = this.state.order == 'top' ? 'desc' : 'asc';
+
+	    colleges = _.filter(colleges, function (c) {
 	      return c.eligible;
 	    });
+	    colleges = _.sortByOrder(colleges, 'score', sort);
 	    colleges = colleges.slice(0, 50);
 
 	    return React.createElement(
@@ -20637,20 +20648,7 @@
 	        )
 	      ),
 	      React.createElement(Formula, { criteria: this.state.criteria }),
-	      React.createElement(
-	        'div',
-	        { className: 'inline-block clearfix mb1' },
-	        React.createElement(
-	          'button',
-	          { type: 'button', className: 'left btn btn-primary bg-black x-group-item rounded-left' },
-	          'Top 50'
-	        ),
-	        React.createElement(
-	          'button',
-	          { type: 'button', className: 'left btn btn-outline x-group-item not-rounded' },
-	          'Bottom 50'
-	        )
-	      ),
+	      React.createElement(OrderToggle, { onClick: this.toggleOrder, order: this.state.order }),
 	      React.createElement(Table, { colleges: colleges, inputs: active_inputs }),
 	      React.createElement(Footer, null)
 	    );
@@ -43512,6 +43510,52 @@
 	});
 
 	module.exports = Table;
+
+/***/ },
+/* 172 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1);
+
+	var OrderToggle = React.createClass({
+	  displayName: 'OrderToggle',
+
+	  clickHandler: function clickHandler(e) {
+	    var order = e.target.getAttribute('data-order');
+	    this.props.onClick(order);
+	  },
+
+	  render: function render() {
+	    var o = this.props.order;
+
+	    return React.createElement(
+	      'div',
+	      { className: 'inline-block clearfix mb1' },
+	      React.createElement(
+	        'button',
+	        { type: 'button',
+	          'data-order': 'top',
+	          className: (o == 'top' ? 'btn-primary bg-black' : 'btn-outline') + ' left btn x-group-item rounded-left',
+	          onClick: this.clickHandler
+	        },
+	        'Top 50'
+	      ),
+	      React.createElement(
+	        'button',
+	        { type: 'button',
+	          'data-order': 'bottom',
+	          className: (o == 'bottom' ? 'btn-primary bg-black' : 'btn-outline') + ' left btn x-group-item rounded-right',
+	          onClick: this.clickHandler
+	        },
+	        'Bottom 50'
+	      )
+	    );
+	  }
+	});
+
+	module.exports = OrderToggle;
 
 /***/ }
 /******/ ]);

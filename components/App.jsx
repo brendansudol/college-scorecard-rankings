@@ -10,6 +10,7 @@ var config = require('../src/app-config'),
 var Header = require('./Header.jsx');
 var Footer = require('./Footer.jsx');
 var Formula = require('./Formula.jsx');
+var OrderToggle = require('./OrderToggle.jsx');
 var Table = require('./Table.jsx');
 
 
@@ -20,6 +21,7 @@ var App = React.createClass({
           inputs: {},
           colleges: [],
           criteria: [],
+          order: 'top',
         };
     },
 
@@ -78,6 +80,12 @@ var App = React.createClass({
       window.history.pushState(this.state, '', '?' + params);
     },
 
+    toggleOrder: function(o) {
+      if (o !== this.state.order) {
+        this.setState({ order: o });
+      }
+    },
+
     changeInput: function(e) {
       var target = e.target.getAttribute('data-input'),
           inputs = this.state.inputs;
@@ -112,7 +120,8 @@ var App = React.createClass({
     },
 
     updateCollegeScore: function(criteria) {
-      var colleges = this.state.colleges;
+      var colleges = this.state.colleges,
+          order = this.state.order;
 
       colleges.forEach(function(college) {
         var val = 0,
@@ -127,8 +136,6 @@ var App = React.createClass({
         college.eligible = eligible;
       });
 
-      colleges = _.sortByOrder(colleges, 'score', 'desc');
-
       this.setState({ 
         colleges: colleges,
         criteria: criteria
@@ -142,7 +149,11 @@ var App = React.createClass({
           input_groups = _.chunk(Object.keys(inputs), 3),
           active_inputs = _.pick(inputs, function(v, k) { return v > 0; });
 
-      var colleges = _.filter(this.state.colleges, function(c) { return c.eligible; });
+      var colleges = this.state.colleges,
+          sort = this.state.order == 'top' ? 'desc' : 'asc';
+
+      colleges = _.filter(colleges, function(c) { return c.eligible; });
+      colleges = _.sortByOrder(colleges, 'score', sort);
       colleges = colleges.slice(0, 50);
 
       return (
@@ -183,10 +194,7 @@ var App = React.createClass({
             </div>
           </form>
           <Formula criteria={this.state.criteria} />
-          <div className="inline-block clearfix mb1">
-            <button type="button" className="left btn btn-primary bg-black x-group-item rounded-left">Top 50</button>
-            <button type="button" className="left btn btn-outline x-group-item not-rounded">Bottom 50</button>
-          </div>
+          <OrderToggle onClick={this.toggleOrder} order={this.state.order} />
           <Table colleges={colleges} inputs={active_inputs} />
           <Footer />
         </div>
