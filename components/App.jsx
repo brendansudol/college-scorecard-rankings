@@ -8,10 +8,11 @@ var config = require('../src/app-config'),
     importance = config.importance;
 
 var Header = require('./Header.jsx');
-var Footer = require('./Footer.jsx');
 var Formula = require('./Formula.jsx');
+var Inputs = require('./Inputs.jsx');
 var OrderToggle = require('./OrderToggle.jsx');
 var Table = require('./Table.jsx');
+var Footer = require('./Footer.jsx');
 
 
 
@@ -146,7 +147,6 @@ var App = React.createClass({
       var self = this;
 
       var inputs = this.state.inputs,
-          input_groups = _.chunk(Object.keys(inputs), 3),
           active_inputs = _.pick(inputs, function(v, k) { return v > 0; });
 
       var colleges = this.state.colleges,
@@ -159,40 +159,7 @@ var App = React.createClass({
       return (
         <div>
           <Header />
-          <div className="h3 bold">Select the ...</div>
-          <form>
-            <div className='fieldset-reset py2'>
-              <div className='clearfix mxn3'>
-              {
-                input_groups.map(function(i_group) {
-                  return (
-                    <div key={i_group} className='clearfix mb2 sm-flex flex-end'>
-                    {
-                      i_group.map(function(i) {
-                        var val = inputs[i];
-                        return (
-                          <div key={i} className='sm-col sm-col-4 mb2 px3'>
-                            <label className='h5 bold block'>
-                              {metrics[i].display} <br/>
-                              <small className='regular'>{importance[val]}</small>
-                            </label>
-                            <input type='range' value={val}
-                              min='0' max='3'
-                              onBlur={self.changeInput}
-                              onChange={self.changeInput}
-                              data-input={i}
-                              className='col-12 dark-gray range-light' />
-                          </div>
-                        );
-                      })
-                    }
-                    </div>
-                  );
-                })
-              }
-              </div>
-            </div>
-          </form>
+          <Inputs onChange={this.changeInput} inputs={inputs} />
           <Formula criteria={this.state.criteria} />
           <OrderToggle onClick={this.toggleOrder} order={this.state.order} />
           <Table colleges={colleges} inputs={active_inputs} />
@@ -201,7 +168,6 @@ var App = React.createClass({
       )
     }
 });
-
 
 
 module.exports = App

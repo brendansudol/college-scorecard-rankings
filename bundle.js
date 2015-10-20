@@ -20443,10 +20443,11 @@
 	    importance = config.importance;
 
 	var Header = __webpack_require__(168);
-	var Footer = __webpack_require__(169);
 	var Formula = __webpack_require__(170);
+	var Inputs = __webpack_require__(173);
 	var OrderToggle = __webpack_require__(172);
 	var Table = __webpack_require__(171);
+	var Footer = __webpack_require__(169);
 
 	var App = React.createClass({
 	  displayName: 'App',
@@ -20581,7 +20582,6 @@
 	    var self = this;
 
 	    var inputs = this.state.inputs,
-	        input_groups = _.chunk(Object.keys(inputs), 3),
 	        active_inputs = _.pick(inputs, function (v, k) {
 	      return v > 0;
 	    });
@@ -20599,54 +20599,7 @@
 	      'div',
 	      null,
 	      React.createElement(Header, null),
-	      React.createElement(
-	        'div',
-	        { className: 'h3 bold' },
-	        'Select the ...'
-	      ),
-	      React.createElement(
-	        'form',
-	        null,
-	        React.createElement(
-	          'div',
-	          { className: 'fieldset-reset py2' },
-	          React.createElement(
-	            'div',
-	            { className: 'clearfix mxn3' },
-	            input_groups.map(function (i_group) {
-	              return React.createElement(
-	                'div',
-	                { key: i_group, className: 'clearfix mb2 sm-flex flex-end' },
-	                i_group.map(function (i) {
-	                  var val = inputs[i];
-	                  return React.createElement(
-	                    'div',
-	                    { key: i, className: 'sm-col sm-col-4 mb2 px3' },
-	                    React.createElement(
-	                      'label',
-	                      { className: 'h5 bold block' },
-	                      metrics[i].display,
-	                      ' ',
-	                      React.createElement('br', null),
-	                      React.createElement(
-	                        'small',
-	                        { className: 'regular' },
-	                        importance[val]
-	                      )
-	                    ),
-	                    React.createElement('input', { type: 'range', value: val,
-	                      min: '0', max: '3',
-	                      onBlur: self.changeInput,
-	                      onChange: self.changeInput,
-	                      'data-input': i,
-	                      className: 'col-12 dark-gray range-light' })
-	                  );
-	                })
-	              );
-	            })
-	          )
-	        )
-	      ),
+	      React.createElement(Inputs, { onChange: this.changeInput, inputs: inputs }),
 	      React.createElement(Formula, { criteria: this.state.criteria }),
 	      React.createElement(OrderToggle, { onClick: this.toggleOrder, order: this.state.order }),
 	      React.createElement(Table, { colleges: colleges, inputs: active_inputs }),
@@ -43556,6 +43509,89 @@
 	});
 
 	module.exports = OrderToggle;
+
+/***/ },
+/* 173 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1);
+	var _ = __webpack_require__(159);
+
+	var config = __webpack_require__(166),
+	    metrics = config.metrics,
+	    importance = config.importance;
+
+	var Inputs = React.createClass({
+	  displayName: 'Inputs',
+
+	  changeHandler: function changeHandler(e) {
+	    this.props.onChange(e);
+	  },
+
+	  render: function render() {
+	    var self = this;
+
+	    var inputs = this.props.inputs,
+	        input_groups = _.chunk(Object.keys(inputs), 3);
+
+	    return React.createElement(
+	      'section',
+	      null,
+	      React.createElement(
+	        'div',
+	        { className: 'h3 bold' },
+	        'Select the ...'
+	      ),
+	      React.createElement(
+	        'form',
+	        null,
+	        React.createElement(
+	          'div',
+	          { className: 'fieldset-reset py2' },
+	          React.createElement(
+	            'div',
+	            { className: 'clearfix mxn3' },
+	            input_groups.map(function (i_group) {
+	              return React.createElement(
+	                'div',
+	                { key: i_group, className: 'clearfix mb2 sm-flex flex-end' },
+	                i_group.map(function (i) {
+	                  var val = inputs[i];
+	                  return React.createElement(
+	                    'div',
+	                    { key: i, className: 'sm-col sm-col-4 mb2 px3' },
+	                    React.createElement(
+	                      'label',
+	                      { className: 'h5 bold block' },
+	                      metrics[i].display,
+	                      ' ',
+	                      React.createElement('br', null),
+	                      React.createElement(
+	                        'small',
+	                        { className: 'regular' },
+	                        importance[val]
+	                      )
+	                    ),
+	                    React.createElement('input', { type: 'range', value: val,
+	                      min: '0', max: '3',
+	                      onBlur: self.changeHandler,
+	                      onChange: self.changeHandler,
+	                      'data-input': i,
+	                      className: 'col-12 dark-gray range-light' })
+	                  );
+	                })
+	              );
+	            })
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+
+	module.exports = Inputs;
 
 /***/ }
 /******/ ]);
