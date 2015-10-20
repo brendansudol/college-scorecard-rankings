@@ -20637,6 +20637,20 @@
 	        )
 	      ),
 	      React.createElement(Formula, { criteria: this.state.criteria }),
+	      React.createElement(
+	        'div',
+	        { className: 'inline-block clearfix mb1' },
+	        React.createElement(
+	          'button',
+	          { type: 'button', className: 'left btn btn-primary bg-black x-group-item rounded-left' },
+	          'Top 50'
+	        ),
+	        React.createElement(
+	          'button',
+	          { type: 'button', className: 'left btn btn-outline x-group-item not-rounded' },
+	          'Bottom 50'
+	        )
+	      ),
 	      React.createElement(Table, { colleges: colleges, inputs: active_inputs }),
 	      React.createElement(Footer, null)
 	    );

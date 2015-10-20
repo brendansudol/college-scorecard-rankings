@@ -183,6 +183,10 @@ var App = React.createClass({
             </div>
           </form>
           <Formula criteria={this.state.criteria} />
+          <div className="inline-block clearfix mb1">
+            <button type="button" className="left btn btn-primary bg-black x-group-item rounded-left">Top 50</button>
+            <button type="button" className="left btn btn-outline x-group-item not-rounded">Bottom 50</button>
+          </div>
           <Table colleges={colleges} inputs={active_inputs} />
           <Footer />
         </div>
