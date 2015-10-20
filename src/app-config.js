@@ -3,36 +3,36 @@ var fmt = require('d3-format');
 
 
 var metrics = {
-  C150_4_POOLED: {
+  c150_4_pooled: {
     display: '% Who Graduate In 6 years',
     fmt: ".0%"
   },
-  PAR_ED_PCT_1STGEN: {
+  par_ed_pct_1stgen: {
     display: '% First Generation College Students',
     fmt: ".0%"
   },
-  MD_EARN_WNE_P10: {
+  md_earn_wne_p10: {
     display: 'Median Wage, 10 Years After Entry',
     fmt: "($.3s"
   },
-  PCTFLOAN: {
-    display: '% Of Students Receiving Federal Loans',
+  pctfloan: {
+    display: '% Receiving Federal Loans',
     fmt: ".0%"
   },
-  PCTPELL: {
-    display: '% Of Students Receiving Pell Grants',
+  pctpell: {
+    display: '% Receiving Pell Grants',
     fmt: ".0%"
   },
-  CDR3: {
+  cdr3: {
     display: 'Default Rate',
     fmt: ".1%"
   },
-  NPT4_PUB_PRIV: {
+  npt4_pub_priv: {
     display: 'Average Net Price',
     fmt: "($.3s"
   },
-  NPT4_048_PUB_PRIV: {
-    display: 'Net Price Whose Families Earn < $48k',
+  npt4_048_pub_priv: {
+    display: 'Net Price Whose Families Earn <$48k',
     fmt: "($.3s"
   }
 };

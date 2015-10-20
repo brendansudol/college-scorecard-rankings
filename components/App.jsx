@@ -115,11 +115,16 @@ var App = React.createClass({
       var colleges = this.state.colleges;
 
       colleges.forEach(function(college) {
-        var val = 0;
+        var val = 0,
+            eligible = true;
+
         criteria.forEach(function(d) {
           val += (college[d.metric + '_z'] * d.perc);
+          if (college[d.metric] == null) eligible = false;
         });
+
         college.score = val;
+        college.eligible = eligible;
       });
 
       colleges = _.sortByOrder(colleges, 'score', 'desc');
@@ -134,10 +139,11 @@ var App = React.createClass({
       var self = this;
 
       var inputs = this.state.inputs,
-          input_groups = _.chunk(Object.keys(inputs), 3);
+          input_groups = _.chunk(Object.keys(inputs), 3),
+          active_inputs = _.pick(inputs, function(v, k) { return v > 0; });
 
-      var active_inputs = _.pick(inputs, function(v, k) { return v > 0; }),
-          colleges = this.state.colleges.slice(0, 25);
+      var colleges = _.filter(this.state.colleges, function(c) { return c.eligible; });
+      colleges = colleges.slice(0, 50);
 
       return (
         <div>
@@ -157,7 +163,7 @@ var App = React.createClass({
                           <div key={i} className='sm-col sm-col-4 mb2 px3'>
                             <label className='h5 bold block'>
                               {metrics[i].display} <br/>
-                              <small className='gray'>{importance[val]}</small>
+                              <small className='regular'>{importance[val]}</small>
                             </label>
                             <input type='range' value={val}
                               min='0' max='3'

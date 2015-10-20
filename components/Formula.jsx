@@ -20,13 +20,13 @@ var Formula = React.createClass({
     criteria = _.sortByOrder(criteria, 'perc', 'desc');
 
     return (
-      <div className="mb3">
-        Ranking includes:&nbsp;
+      <div className="mb3 h5">
+        <span className="bold">Ranking includes:&nbsp;</span>
         {
           criteria.map(function(c, i) {
             return (
               <span key={c.metric}>
-                {metrics[c.metric].display}
+                {metrics[c.metric].display.replace('%', 'Percent')}
                 &nbsp;({self.format(c.perc)})
                 {i + 1 == criteria.length ? '.' : ', '}
               </span>

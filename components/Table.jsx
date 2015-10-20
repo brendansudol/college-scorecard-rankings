@@ -18,6 +18,11 @@ var Table = React.createClass({
       return null;
     };
 
+    // sort cols by contribution
+    cols = cols.sort(function(a, b) { 
+        return inputs[b] - inputs[a]; 
+    });
+
     var w1 = cols.length == 1 ? 50 : 40,
         w2 = (100 - 5 - w1) / cols.length;
 
@@ -44,14 +49,14 @@ var Table = React.createClass({
           {
             colleges.map(function(college, i) {
               return (
-                <tr key={college.UNITID}>
+                <tr key={college.unitid}>
                   <td>{i + 1}</td>
-                  <td>{college.INSTNM}</td>
+                  <td>{college.instnm}</td>
                   {
                     cols.map(function(col) {
                       var fmt = metrics[col].fmt;
                       return (
-                        <td key={college.UNITID + '-' + col}>
+                        <td key={college.unitid + '-' + col}>
                           {fmt(college[col])}
                         </td>
                       )
