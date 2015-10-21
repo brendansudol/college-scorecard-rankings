@@ -32,7 +32,7 @@ var metrics = {
     fmt: "($.3s"
   },
   npt4_048_pub_priv: {
-    display: 'Net Price Whose Families Earn <$48k',
+    display: 'Net Price For Families Earning <$48k',
     fmt: "($.3s"
   }
 };
