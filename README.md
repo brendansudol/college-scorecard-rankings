@@ -15,7 +15,7 @@ then, in another tab:
 
 ---
 
-to recreate the cleaned dataset (requires python & virtualenv):
+to recreate cleaned dataset (requires python & virtualenv):
 
     cd college-data/
     virtualenv venv
