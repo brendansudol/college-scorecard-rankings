@@ -121,8 +121,7 @@ var App = React.createClass({
     },
 
     updateCollegeScore: function(criteria) {
-      var colleges = this.state.colleges,
-          order = this.state.order;
+      var colleges = this.state.colleges;
 
       colleges.forEach(function(college) {
         var val = 0,
@@ -144,8 +143,6 @@ var App = React.createClass({
     },
 
     render: function() {
-      var self = this;
-
       var inputs = this.state.inputs,
           active_inputs = _.pick(inputs, function(v, k) { return v > 0; });
 
