@@ -51,7 +51,14 @@ var Table = React.createClass({
               return (
                 <tr key={college.unitid}>
                   <td>{i + 1}</td>
-                  <td>{college.instnm}</td>
+                  <td>
+                    <a className="black" 
+                       href={'http://' + college.insturl} 
+                       target="_blank"
+                    >
+                      {college.instnm}
+                    </a>
+                  </td>
                   {
                     cols.map(function(col) {
                       var fmt = metrics[col].fmt;
