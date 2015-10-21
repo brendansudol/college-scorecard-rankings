@@ -20,7 +20,7 @@ var Inputs = React.createClass({
 
     return (
       <section>
-        <div className="h3 bold">Select the ...</div>
+        <div className="h3 bold mb2">Select the variables and weights to determine ranking:</div>
         <form>
           <div className='fieldset-reset py2'>
             <div className='clearfix mxn3'>

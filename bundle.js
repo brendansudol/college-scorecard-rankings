@@ -43261,8 +43261,13 @@
 	      ),
 	      React.createElement(
 	        'div',
-	        { className: 'h4 m0' },
-	        '* Based on ...'
+	        { className: 'h5 m0' },
+	        '* Using the ',
+	        React.createElement(
+	          'a',
+	          { target: '_blank', href: 'https://collegescorecard.ed.gov/data/' },
+	          'College Scorecard Data'
+	        )
 	      )
 	    );
 	  }
@@ -43456,7 +43461,7 @@
 	      React.createElement(
 	        'p',
 	        null,
-	        'A note about the data and methodology. We filtered for schools where the predominant degree granted is a four-year bachelor\'s degree. We also filter out trade-specific schools and religious programs like seminaries and yeshivas. There are also a few limitations to the income data that the government released. Incomes reported in the data set include only students who took out federal loans from the government. Each institution\'s score is based on a weighted sum of z-scores for each variable mentioned in the list. Ratings cannot be compared across lists.'
+	        'About the data and methodology: We filtered for schools where the predominant degree granted is a four-year bachelor\'s degree. We also filter out religious programs like (i.e., seminaries, yeshivas) and trade-specific schools. Each institution\'s ranking is based on a weighted sum of z-scores for each variable mentioned in the list.'
 	      )
 	    );
 	  }
@@ -43541,8 +43546,8 @@
 	      null,
 	      React.createElement(
 	        'div',
-	        { className: 'h3 bold' },
-	        'Select the ...'
+	        { className: 'h3 bold mb2' },
+	        'Select the variables and weights to determine ranking:'
 	      ),
 	      React.createElement(
 	        'form',
