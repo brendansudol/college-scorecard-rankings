@@ -17,6 +17,8 @@ var Formula = React.createClass({
     var self = this, 
         criteria = this.props.criteria;
 
+    if (criteria.length === 0) return null;
+
     criteria = _.sortByOrder(criteria, 'perc', 'desc');
 
     return (

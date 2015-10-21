@@ -9,7 +9,10 @@ var OrderToggle = React.createClass({
   },
 
   render: function() {
-    var o = this.props.order;
+    var o = this.props.order,
+        criteria = this.props.criteria;
+
+    if (criteria.length === 0) return null;
 
     return (
       <div className="inline-block clearfix mb1">

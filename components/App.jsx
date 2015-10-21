@@ -159,10 +159,22 @@ var App = React.createClass({
       return (
         <div>
           <Header />
-          <Inputs onChange={this.changeInput} inputs={inputs} />
-          <Formula criteria={this.state.criteria} />
-          <OrderToggle onClick={this.toggleOrder} order={this.state.order} />
-          <Table colleges={colleges} inputs={active_inputs} />
+          <Inputs 
+            onChange={this.changeInput} 
+            inputs={inputs} 
+          />
+          <Formula 
+            criteria={this.state.criteria} 
+          />
+          <OrderToggle 
+            onClick={this.toggleOrder} 
+            order={this.state.order} 
+            criteria={this.state.criteria} 
+          />
+          <Table 
+            colleges={colleges} 
+            inputs={active_inputs} 
+          />
           <Footer />
         </div>
       )

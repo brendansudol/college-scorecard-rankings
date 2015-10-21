@@ -20599,10 +20599,22 @@
 	      'div',
 	      null,
 	      React.createElement(Header, null),
-	      React.createElement(Inputs, { onChange: this.changeInput, inputs: inputs }),
-	      React.createElement(Formula, { criteria: this.state.criteria }),
-	      React.createElement(OrderToggle, { onClick: this.toggleOrder, order: this.state.order }),
-	      React.createElement(Table, { colleges: colleges, inputs: active_inputs }),
+	      React.createElement(Inputs, {
+	        onChange: this.changeInput,
+	        inputs: inputs
+	      }),
+	      React.createElement(Formula, {
+	        criteria: this.state.criteria
+	      }),
+	      React.createElement(OrderToggle, {
+	        onClick: this.toggleOrder,
+	        order: this.state.order,
+	        criteria: this.state.criteria
+	      }),
+	      React.createElement(Table, {
+	        colleges: colleges,
+	        inputs: active_inputs
+	      }),
 	      React.createElement(Footer, null)
 	    );
 	  }
@@ -42734,7 +42746,7 @@
 	var metrics = {
 	  c150_4_pooled: {
 	    display: '% Who Graduate In 6 years',
-	    fmt: ".0%"
+	    fmt: ".1%"
 	  },
 	  par_ed_pct_1stgen: {
 	    display: '% First Generation College Students',
@@ -42746,11 +42758,11 @@
 	  },
 	  pctfloan: {
 	    display: '% Receiving Federal Loans',
-	    fmt: ".0%"
+	    fmt: ".1%"
 	  },
 	  pctpell: {
 	    display: '% Receiving Pell Grants',
-	    fmt: ".0%"
+	    fmt: ".1%"
 	  },
 	  cdr3: {
 	    display: 'Default Rate',
@@ -43336,6 +43348,8 @@
 	    var self = this,
 	        criteria = this.props.criteria;
 
+	    if (criteria.length === 0) return null;
+
 	    criteria = _.sortByOrder(criteria, 'perc', 'desc');
 
 	    return React.createElement(
@@ -43486,7 +43500,10 @@
 	  },
 
 	  render: function render() {
-	    var o = this.props.order;
+	    var o = this.props.order,
+	        criteria = this.props.criteria;
+
+	    if (criteria.length === 0) return null;
 
 	    return React.createElement(
 	      'div',

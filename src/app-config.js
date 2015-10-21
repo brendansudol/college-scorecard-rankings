@@ -5,7 +5,7 @@ var fmt = require('d3-format');
 var metrics = {
   c150_4_pooled: {
     display: '% Who Graduate In 6 years',
-    fmt: ".0%"
+    fmt: ".1%"
   },
   par_ed_pct_1stgen: {
     display: '% First Generation College Students',
@@ -17,11 +17,11 @@ var metrics = {
   },
   pctfloan: {
     display: '% Receiving Federal Loans',
-    fmt: ".0%"
+    fmt: ".1%"
   },
   pctpell: {
     display: '% Receiving Pell Grants',
-    fmt: ".0%"
+    fmt: ".1%"
   },
   cdr3: {
     display: 'Default Rate',
