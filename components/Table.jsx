@@ -79,9 +79,11 @@ var Table = React.createClass({
       <p>
         About the data and methodology: I filtered for schools where the 
         predominant degree granted is a four-year bachelor's degree. I also 
-        filter out religious programs like (i.e., seminaries, yeshivas) and 
+        filter out religious programs (i.e., seminaries, yeshivas) and 
         trade-specific schools. Each institution's ranking is based on 
-        a weighted sum of z-scores for each variable mentioned in the list.
+        a weighted sum of z-scores for each variable. The 
+        script that generates the dataset used can be found&nbsp;
+        <a href="https://github.com/brendansudol/college-scorecard-rankings/blob/gh-pages/college-data/ipy-notebooks/munge.ipynb">here</a>.
       </p>
       </section>
     )
