@@ -82,8 +82,9 @@ var Table = React.createClass({
         filter out religious programs (i.e., seminaries, yeshivas) and 
         trade-specific schools. Each institution's ranking is based on 
         a weighted sum of z-scores for each variable. The 
-        script that generates the dataset used can be found&nbsp;
-        <a href="https://github.com/brendansudol/college-scorecard-rankings/blob/gh-pages/college-data/ipy-notebooks/munge.ipynb">here</a>.
+        script that generates the cleaned dataset can be found&nbsp;
+        <a href="https://github.com/brendansudol/college-scorecard-rankings/blob/gh-pages/college-data/ipy-notebooks/munge.ipynb">here</a>, and 
+        more information about this project can be found <a href="http://www.brendansudol.com/writing/college-rankings/">here</a>.
       </p>
       </section>
     )
